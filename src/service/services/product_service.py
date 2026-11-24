@@ -1,4 +1,5 @@
 from __future__ import annotations
+from ..exceptions import InsufficientStockError
 from ..models.product import Product
 from ..repositories.product_repository import InMemoryProductRepository
 from ..validators import validate_codigo, validate_preco, validate_quantidade
@@ -46,4 +47,20 @@ class ProductService:
         quantidade = validate_quantidade(quantidade)
         product = self._repository.get(codigo)
         product.estoque += quantidade
+        return product
+
+    def remove_stock(self, codigo, quantidade) -> Product:
+        """Saída de Estoque: subtrai uma quantidade do estoque do produto.
+
+        Lança InvalidDataError se o código ou a quantidade forem inválidos,
+        ProductNotFoundError se o produto não estiver cadastrado e
+        InsufficientStockError se o estoque disponível for menor que a quantidade.
+        Em qualquer caso de erro, nada é alterado.
+        """
+        codigo = validate_codigo(codigo)
+        quantidade = validate_quantidade(quantidade)
+        product = self._repository.get(codigo)
+        if product.estoque < quantidade:
+            raise InsufficientStockError(product.codigo, product.estoque, quantidade)
+        product.estoque -= quantidade
         return product
