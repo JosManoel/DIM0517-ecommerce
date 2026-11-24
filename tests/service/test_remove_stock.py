@@ -1,15 +1,14 @@
 import unittest
 from decimal import Decimal
 
-from src.service.exceptions import (
+from src.service import (
+    InMemoryProductRepository,
     InsufficientStockError,
     InvalidDataError,
+    Product,
     ProductNotFoundError,
+    ProductService,
 )
-from src.service.models.product import Product
-from src.service.repositories.product_repository import InMemoryProductRepository
-from src.service.services.product_service import ProductService
-
 
 class RemoveStockTest(unittest.TestCase):
     def setUp(self):
