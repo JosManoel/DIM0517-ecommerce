@@ -9,6 +9,15 @@ from decimal import Decimal
 from .exceptions import InvalidDataError
 
 
+def _validate_positive_int(value, invalid_prefix: str, non_positive_subject: str) -> int:
+    """Aceita só inteiro maior que zero. bool é rejeitado (em Python, True é um int)."""
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise InvalidDataError(f"{invalid_prefix}: {value!r}. Informe um número inteiro.")
+    if value <= 0:
+        raise InvalidDataError(f"{invalid_prefix}: {value}. {non_positive_subject} deve ser maior que zero.")
+    return value
+
+
 def validate_codigo(codigo) -> int:
     """Aceita só inteiro maior que zero. bool é rejeitado (em Python, True é um int)."""
     if isinstance(codigo, bool) or not isinstance(codigo, int):
@@ -16,6 +25,11 @@ def validate_codigo(codigo) -> int:
     if codigo <= 0:
         raise InvalidDataError(f"Código inválido: {codigo}. O código deve ser maior que zero.")
     return codigo
+
+
+def validate_quantidade(quantidade) -> int:
+    """Aceita só inteiro maior que zero. bool é rejeitado (em Python, True é um int)."""
+    return _validate_positive_int(quantidade, "Quantidade inválida", "A quantidade")
 
 
 def validate_preco(preco) -> Decimal:
