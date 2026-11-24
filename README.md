@@ -46,7 +46,7 @@ Este projeto está sendo desenvolvido como **projeto final da disciplina de Ger�
 
 * José Manoel Freitas da Silva | [JosManoel](https://github.com/JosManoel)
 * Guilherme Augusto Pondofe Santana  | [pondof](https://github.com/pondof)
-* Carlos Henrique da Silva Guimaraes |
+* Carlos Henrique da Silva Guimaraes | [chenrique29](https://github.com/chenrique29)
 
 <hr>
 
