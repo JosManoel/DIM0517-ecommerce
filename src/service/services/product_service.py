@@ -1,7 +1,7 @@
 from __future__ import annotations
 from ..models.product import Product
 from ..repositories.product_repository import InMemoryProductRepository
-from ..validators import validate_codigo, validate_preco
+from ..validators import validate_codigo, validate_preco, validate_quantidade
 
 
 class ProductService:
@@ -34,3 +34,16 @@ class ProductService:
         """
         codigo = validate_codigo(codigo)
         return self._repository.get(codigo)
+
+    def add_stock(self, codigo, quantidade) -> Product:
+        """Entrada de Estoque: acrescenta uma quantidade ao estoque do produto.
+
+        Lança InvalidDataError se o código ou a quantidade forem inválidos e
+        ProductNotFoundError se o produto não estiver cadastrado.
+        Nos dois casos, nada é alterado.
+        """
+        codigo = validate_codigo(codigo)
+        quantidade = validate_quantidade(quantidade)
+        product = self._repository.get(codigo)
+        product.estoque += quantidade
+        return product
