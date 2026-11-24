@@ -1,7 +1,4 @@
-"""Operações de negócio sobre produtos."""
-
 from __future__ import annotations
-
 from ..models.product import Product
 from ..repositories.product_repository import InMemoryProductRepository
 from ..validators import validate_codigo, validate_preco
@@ -28,3 +25,12 @@ class ProductService:
         product = Product(codigo=codigo, preco=preco, estoque=0)
         self._repository.add(product)
         return product
+
+    def get_stock(self, codigo) -> Product:
+        """Consultar Estoque: retorna o produto com o estoque atual.
+
+        Lança InvalidDataError se o código for inválido e
+        ProductNotFoundError se o produto não estiver cadastrado.
+        """
+        codigo = validate_codigo(codigo)
+        return self._repository.get(codigo)
