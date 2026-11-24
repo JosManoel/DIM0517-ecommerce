@@ -2,7 +2,6 @@ from __future__ import annotations
 from ..models.product import Product
 from ..repositories.product_repository import InMemoryProductRepository
 from ..validators import validate_codigo, validate_preco
-from ..exceptions import InvalidDataError, ProductNotFoundError
 
 
 class ProductService:
@@ -27,18 +26,11 @@ class ProductService:
         self._repository.add(product)
         return product
 
-    def get_stock(self, codigo: int) -> dict:
-            """Consulta o estoque atual de um produto.
+    def get_stock(self, codigo) -> Product:
+        """Consultar Estoque: retorna o produto com o estoque atual.
 
-            Retorna {"codigo": <int>, "estoque": <int>}.
-            Lança InvalidDataError se o código não for um inteiro.
-            Lança ProductNotFoundError se o produto não existir.
-            """
-            if isinstance(codigo, bool) or not isinstance(codigo, int):
-                raise InvalidDataError("O código do produto deve ser um número inteiro")
-
-            product = self._repository.find(codigo)
-            if product is None:
-                raise ProductNotFoundError(codigo)
-
-            return {"codigo": product.codigo, "estoque": product.estoque}
+        Lança InvalidDataError se o código for inválido e
+        ProductNotFoundError se o produto não estiver cadastrado.
+        """
+        codigo = validate_codigo(codigo)
+        return self._repository.get(codigo)
