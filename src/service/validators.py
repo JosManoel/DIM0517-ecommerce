@@ -1,7 +1,7 @@
 """Validação dos dados de entrada da camada de serviço.
 
 Fica num módulo próprio porque todas as operações validam os mesmos dados
-(código, preço e quantidade).
+(código, preço, quantidade e itens de venda).
 """
 
 from decimal import Decimal
@@ -39,3 +39,18 @@ def validate_preco(preco) -> Decimal:
     if not valor.is_finite() or valor <= 0:
         raise InvalidDataError(f"Preço inválido: {preco}. O preço deve ser maior que zero.")
     return valor
+
+
+def validate_itens(itens) -> list[tuple[int, int]]:
+    """Aceita só lista não vazia de dicionários com codigo e quantidade.
+
+    Devolve os pares (codigo, quantidade) na mesma ordem.
+    """
+    if not isinstance(itens, list) or not itens:
+        raise InvalidDataError("Itens inválidos. Informe uma lista com pelo menos um item.")
+    pares = []
+    for item in itens:
+        if not isinstance(item, dict):
+            raise InvalidDataError(f"Item inválido: {item!r}. Informe codigo e quantidade.")
+        pares.append((validate_codigo(item.get("codigo")), validate_quantidade(item.get("quantidade"))))
+    return pares
