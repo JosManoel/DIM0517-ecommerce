@@ -19,14 +19,17 @@ class GetStockTest(unittest.TestCase):
 
         result = self.service.get_stock(123)
 
-        self.assertEqual(result, {"codigo": 123, "estoque": 15})
+        self.assertIsInstance(result, Product)
+        self.assertEqual(result.codigo, 123)
+        self.assertEqual(result.estoque, 15)
 
     def test_new_product_has_zero_stock(self):
         self.repository.add(Product(codigo=1, preco=Decimal("10.00")))
 
         result = self.service.get_stock(1)
 
-        self.assertEqual(result["estoque"], 0)
+        self.assertIsInstance(result, Product)
+        self.assertEqual(result.estoque, 0)
 
     def test_raises_when_product_does_not_exist(self):
         with self.assertRaises(ProductNotFoundError):
