@@ -33,7 +33,7 @@ Embora pastas, arquivos e classes internas sejam escritos em inglês, os endpoin
 
 ## Fluxo de Git e Rastreabilidade (GitFlow)
 
-* **Branches permanentes:** main (releases estabilizadas) e develop (integração). Nunca sugira ou execute commits diretos nessas branches durante o desenvolvimento de funcionalidades.
-* **Branches auxiliares:** Toda branch deve partir de develop (ou release/* para bugfixes) e conter o ID da issue: feature/issue-<ID>-<descricao-curta> ou bugfix/issue-<ID>-<descricao-curta>.
+* **Branches permanentes:** main (releases estabilizadas) e dev (integração). Nunca sugira ou execute commits diretos nessas branches durante o desenvolvimento de funcionalidades.
+* **Branches auxiliares:** Toda branch deve partir de dev (ou release/* para bugfixes) e conter o ID da issue: feature/issue-<ID>-<descricao-curta> ou bugfix/issue-<ID>-<descricao-curta>.
 * **Proibição de exclusão:** NUNCA exclua nenhuma branch remota, mesmo após o merge.
 * **Commits:** Utilize Conventional Commits (feat:, fix:, chore:, docs:, test:) e sempre referencie a issue correspondente no final da mensagem (_ex.: feat: implementa cadastro de produto na camada de servico (Refs #4)_).
