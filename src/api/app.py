@@ -9,14 +9,14 @@ from __future__ import annotations
 
 from flask import Flask, jsonify, request
 
-from src.service.exceptions import (
+from src.service import (
     DomainError,
     InsufficientStockError,
     InvalidDataError,
     ProductAlreadyExistsError,
     ProductNotFoundError,
+    ProductService,
 )
-from src.service.services.product_service import ProductService
 
 # Mapeamento único: exceção de domínio -> status HTTP.
 ERROR_STATUS = {
@@ -35,11 +35,30 @@ def _read_json_object() -> dict:
     return data
 
 
+def _parse_codigo(codigo: str) -> int:
+    """Converte o código da URL para inteiro.
+
+    Com <int:codigo> na rota, o Flask responderia 404 em vez de 400
+    quando o código não fosse numérico.
+    """
+    try:
+        return int(codigo)
+    except ValueError:
+        raise InvalidDataError("O código do produto deve ser um número inteiro") from None
+
+
 def _product_to_json(product) -> dict:
     # preco sai como número no JSON (e não como texto).
     return {
         "codigo": product.codigo,
         "preco": float(product.preco),
+        "estoque": product.estoque,
+    }
+
+
+def _stock_to_json(product) -> dict:
+    return {
+        "codigo": product.codigo,
         "estoque": product.estoque,
     }
 
@@ -62,14 +81,22 @@ def create_app(service: ProductService | None = None) -> Flask:
 
     @app.get("/loja/produto/<codigo>/estoque")
     def get_stock(codigo: str):
-        # O código chega como texto e é convertido aqui: com <int:codigo>
-        # o Flask responderia 404 em vez de 400 para valores inválidos.
-        try:
-            codigo_int = int(codigo)
-        except ValueError:
-            raise InvalidDataError("O código do produto deve ser um número inteiro") from None
-        product = product_service.get_stock(codigo_int)
-        return jsonify({"codigo": product.codigo, "estoque": product.estoque}), 200
+        product = product_service.get_stock(_parse_codigo(codigo))
+        return jsonify(_stock_to_json(product)), 200
+
+    @app.put("/loja/produto/<codigo>/entrada")
+    def add_stock(codigo: str):
+        codigo_int = _parse_codigo(codigo)
+        data = _read_json_object()
+        product = product_service.add_stock(codigo_int, data.get("quantidade"))
+        return jsonify(_stock_to_json(product)), 200
+
+    @app.put("/loja/produto/<codigo>/saida")
+    def remove_stock(codigo: str):
+        codigo_int = _parse_codigo(codigo)
+        data = _read_json_object()
+        product = product_service.remove_stock(codigo_int, data.get("quantidade"))
+        return jsonify(_stock_to_json(product)), 200
 
     return app
 
