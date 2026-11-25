@@ -5,10 +5,10 @@ Descreva de forma objetiva o que foi implementado ou corrigido neste Pull Reques
 - `Closes #` / `Fixes #` / `Refs #`
 
 ## Tipo de Mudança 
-- [ ] `feature/*` → `develop` (Nova funcionalidade)
-- [ ] `bugfix/*` → `develop` (Correção de bug em desenvolvimento)
-- [ ] `release/*` → `main` e `develop` (Preparação de baseline / release)
-- [ ] `hotfix/*` → `main` e `develop` (Correção em produção/baseline)
+- [ ] `feature/*` → `dev` (Nova funcionalidade)
+- [ ] `bugfix/*` → `dev` (Correção de bug em desenvolvimento)
+- [ ] `release/*` → `main` e `dev` (Preparação de baseline / release)
+- [ ] `hotfix/*` → `main` e `dev` (Correção em produção/baseline)
 
 ## Camadas Modificadas
 - [ ] Camada de Serviço / Negócio (`src/service`)
