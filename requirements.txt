@@ -1,1 +1,2 @@
 # requirements base
+Flask>=3.0
