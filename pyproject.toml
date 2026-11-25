@@ -9,7 +9,10 @@ description = "Sistema básico de controle de produtos e estoque para e-commerce
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "Flask>=3.0",
+    "requests>=2.31",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]
