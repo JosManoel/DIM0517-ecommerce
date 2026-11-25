@@ -32,6 +32,9 @@ class ApiClient:
     def remove_stock(self, codigo, quantidade) -> dict:
         return self._request("PUT", f"{self._product_path(codigo)}/saida", {"quantidade": quantidade})
 
+    def register_sale(self, itens: list[dict]) -> dict:
+        return self._request("POST", "/loja/venda", {"itens": itens})
+
     def _product_path(self, codigo) -> str:
         return f"/loja/produto/{quote(str(codigo), safe='')}"
 

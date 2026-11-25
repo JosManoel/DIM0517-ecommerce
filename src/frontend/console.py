@@ -22,8 +22,12 @@ def read_text(label: str) -> str:
 
 
 def read_number(label: str) -> int | float | str:
-    """Lê um número (aceita vírgula). O que não for número segue como texto, e a API responde 400."""
-    text = read_text(label)
+    """Lê um número pelo teclado."""
+    return parse_number(read_text(label))
+
+
+def parse_number(text: str) -> int | float | str:
+    """Converte para número (aceita vírgula). O que não for número segue como texto, e a API responde 400."""
     try:
         if re.fullmatch(r"-?[0-9]+", text):
             return int(text)
@@ -51,6 +55,26 @@ def remove_stock(client: ApiClient) -> None:
     show_stock(client.remove_stock(read_text("Código"), read_number("Quantidade")))
 
 
+def register_sale(client: ApiClient) -> None:
+    data = client.register_sale(read_sale_items())
+    for item in data["itens"]:
+        print(
+            f"Produto {item['codigo']}. Quantidade: {item['quantidade']}. "
+            f"Subtotal: R$ {item['subtotal']:.2f}. Estoque: {item['estoque']}."
+        )
+    print(f"Total da venda: R$ {data['total']:.2f}.")
+
+
+def read_sale_items() -> list[dict]:
+    """Lê os itens até o código vir vazio."""
+    itens = []
+    while True:
+        codigo = input("Código (Enter para finalizar): ").strip()
+        if not codigo:
+            return itens
+        itens.append({"codigo": parse_number(codigo), "quantidade": read_number("Quantidade")})
+
+
 def show_stock(data: dict) -> None:
     print(f"Produto {data['codigo']}. Estoque: {data['estoque']}.")
 
@@ -60,6 +84,7 @@ OPTIONS = {
     "2": ("Consultar Estoque", get_stock),
     "3": ("Entrada de Estoque", add_stock),
     "4": ("Saída de Estoque", remove_stock),
+    "5": ("Venda", register_sale),
 }
 
 
