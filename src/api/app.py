@@ -63,6 +63,23 @@ def _stock_to_json(product) -> dict:
     }
 
 
+def _sale_to_json(sale) -> dict:
+    # total e subtotal saem como número no JSON (e não como texto).
+    return {
+        "total": float(sale.total),
+        "itens": [
+            {
+                "codigo": item.codigo,
+                "quantidade": item.quantidade,
+                "subtotal": float(item.subtotal),
+                "estoque": item.estoque,
+            }
+            for item in sale.itens
+        ],
+    }
+
+
+
 def create_app(service: ProductService | None = None) -> Flask:
     """Cria a aplicação Flask, com uma única instância de ProductService."""
     app = Flask(__name__)
@@ -97,6 +114,12 @@ def create_app(service: ProductService | None = None) -> Flask:
         data = _read_json_object()
         product = product_service.remove_stock(codigo_int, data.get("quantidade"))
         return jsonify(_stock_to_json(product)), 200
+
+    @app.post("/loja/venda")
+    def register_sale():
+        data = _read_json_object()
+        sale = product_service.register_sale(data.get("itens"))
+        return jsonify(_sale_to_json(sale)), 201
 
     return app
 
